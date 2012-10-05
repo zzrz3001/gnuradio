@@ -283,6 +283,7 @@ class transmit_path(gr.hier_block2):
         self.sw_interp = 10
         self.audio_rate = self.if_rate // self.sw_interp   #  32 kS/s
 
+
         self.audio_gain = 10
         self.normal_gain = 32000
 

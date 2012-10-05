@@ -158,7 +158,8 @@ class _queue_watcher_thread(_threading.Thread):
 
     def run(self):
         while self.keep_running:
-            msg = self.rcvd_pktq.delete_head()
+            print "lol\n"
+            msg = self.rcvd_pktq.delete_head() #Del msg frm head of  queue, return it. Block if no msg avail. 
             ok, payload = packet_utils.unmake_packet(msg.to_string(), int(msg.arg1()))
             if self.callback:
                 self.callback(ok, payload)
