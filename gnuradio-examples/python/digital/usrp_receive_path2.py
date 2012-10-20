@@ -1,5 +1,5 @@
 #
-# Copyright 2010 Free Software Foundation, Inc.
+# Copyright 2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,8 +21,8 @@
 
 from gnuradio import gr
 from gnuradio import usrp_options
-import receive_path
-from pick_bitrate2 import pick_rx_bitrate
+import receive_path2
+from pick_bitrate import pick_rx_bitrate
 from gnuradio import eng_notation
 
 def add_freq_option(parser):
@@ -42,7 +42,7 @@ def add_freq_option(parser):
 def add_options(parser, expert):
     add_freq_option(parser)
     usrp_options.add_rx_options(parser)
-    receive_path.receive_path.add_options(parser, expert)
+    receive_path2.receive_path.add_options(parser, expert)
     expert.add_option("", "--rx-freq", type="eng_float", default=None,
                           help="set Rx frequency to FREQ [default=%default]", metavar="FREQ")
     parser.add_option("-v", "--verbose", action="store_true", default=False)
@@ -64,7 +64,7 @@ class usrp_receive_path(gr.hier_block2):
         self._demod_class = demod_class
         self._setup_usrp_source(options)
 
-        rx_path = receive_path.receive_path(demod_class, rx_callback, options)
+        rx_path = receive_path2.receive_path(demod_class, rx_callback, options)
         for attr in dir(rx_path): #forward the methods
             if not attr.startswith('_') and not hasattr(self, attr):
                 setattr(self, attr, getattr(rx_path, attr))

@@ -45,6 +45,7 @@ libgeneral_la_SOURCES = 		\
 	gr_align_on_samplenumbers_ss.cc	\
 	gr_bin_statistics_f.cc		\
 	gr_binary_slicer_fb.cc		\
+	gr_binary_slicer_fb2.cc		\
 	gr_bytes_to_syms.cc		\
 	gr_char_to_float.cc		\
 	gr_check_counting_s.cc		\
@@ -130,6 +131,7 @@ libgeneral_la_SOURCES = 		\
 	gr_pwr_squelch_cc.cc		\
 	gr_pwr_squelch_ff.cc		\
 	gr_quadrature_demod_cf.cc	\
+	gr_quadrature_demod2_cf.cc	\
 	gr_rail_ff.cc			\
 	gr_random.cc			\
 	gr_regenerate_bb.cc		\
@@ -204,6 +206,7 @@ grinclude_HEADERS = 			\
 	gr_align_on_samplenumbers_ss.h	\
 	gr_bin_statistics_f.h		\
 	gr_binary_slicer_fb.h		\
+	gr_binary_slicer_fb2.h		\
 	gr_bytes_to_syms.h		\
 	gr_char_to_float.h		\
 	gr_check_counting_s.h		\
@@ -294,6 +297,7 @@ grinclude_HEADERS = 			\
 	gr_pwr_squelch_cc.h		\
 	gr_pwr_squelch_ff.h		\
 	gr_quadrature_demod_cf.h	\
+	gr_quadrature_demod2_cf.h	\
 	gr_rail_ff.h			\
 	gr_random.h			\
 	gr_regenerate_bb.h		\
@@ -381,6 +385,7 @@ swiginclude_HEADERS =			\
 	gr_align_on_samplenumbers_ss.i	\
 	gr_bin_statistics_f.i		\
 	gr_binary_slicer_fb.i		\
+	gr_binary_slicer_fb2.i		\
 	gr_bytes_to_syms.i		\
 	gr_char_to_float.i		\
 	gr_check_counting_s.i		\
@@ -461,6 +466,7 @@ swiginclude_HEADERS =			\
 	gr_pwr_squelch_cc.i		\
 	gr_pwr_squelch_ff.i		\
 	gr_quadrature_demod_cf.i	\
+	gr_quadrature_demod2_cf.i	\
 	gr_rail_ff.i			\
 	gr_regenerate_bb.i		\
 	gr_remez.i			\

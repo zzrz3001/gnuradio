@@ -182,10 +182,10 @@ def unmake_packet(whitened_payload_with_crc, whitener_offset=0, dewhitening=1):
 
     ok, payload = gru.check_crc32(payload_with_crc)
 
-    if 0:
-        print "payload_with_crc =", string_to_hex_list(payload_with_crc)
-        print "ok = %r, len(payload) = %d" % (ok, len(payload))
-        print "payload =", string_to_hex_list(payload)
+    #if 0:
+    #    print "payload_with_crc =", string_to_hex_list(payload_with_crc)
+    #    print "ok = %r, len(payload) = %d" % (ok, len(payload))
+    #    print "payload =", string_to_hex_list(payload)
 
     return ok, payload
 

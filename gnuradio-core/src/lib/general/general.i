@@ -28,6 +28,7 @@
 #include <gr_head.h>
 #include <gr_skiphead.h>
 #include <gr_quadrature_demod_cf.h>
+#include <gr_quadrature_demod2_cf.h>
 #include <gr_remez.h>
 #include <gr_float_to_complex.h>
 #include <gr_check_counting_s.h>
@@ -113,6 +114,7 @@
 #include <gr_diff_phasor_cc.h>
 #include <gr_constellation_decoder_cb.h>
 #include <gr_binary_slicer_fb.h>
+#include <gr_binary_slicer_fb2.h>
 #include <gr_diff_encoder_bb.h>
 #include <gr_diff_decoder_bb.h>
 #include <gr_framer_sink_1.h>
@@ -154,7 +156,8 @@
 %include "gr_null_source.i"
 %include "gr_head.i"
 %include "gr_skiphead.i"
-%include "gr_quadrature_demod_cf.i"
+%include "gr_quadrature_demod_cf.i"   
+%include "gr_quadrature_demod2_cf.i"
 %include "gr_remez.i"
 %include "gr_float_to_complex.i"
 %include "gr_check_counting_s.i"
@@ -240,6 +243,7 @@
 %include "gr_diff_phasor_cc.i"
 %include "gr_constellation_decoder_cb.i"
 %include "gr_binary_slicer_fb.i"
+%include "gr_binary_slicer_fb2.i"
 %include "gr_diff_encoder_bb.i"
 %include "gr_diff_decoder_bb.i"
 %include "gr_framer_sink_1.i"

@@ -44,6 +44,9 @@ gr_binary_slicer_fb::gr_binary_slicer_fb ()
 static inline int
 slice(float x)
 {
+  // 0 = -1, 1 = 1?
+  //assuming a repeating code.
+  //should SNR still analyze bitwise?
   return x < 0 ? 0 : 1;
 }
 

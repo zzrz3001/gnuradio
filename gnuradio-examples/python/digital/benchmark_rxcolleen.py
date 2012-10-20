@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2010 Free Software Foundation, Inc.
+# Copyright 2005,2006,2007,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru, modulation_utils2
+from gnuradio import gr, gru, modulation_utils
 from gnuradio import usrp
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
@@ -69,14 +69,15 @@ def main():
             ok, pktno, n_rcvd, n_right)
         #print "payload ",payload
 
-    demods = modulation_utils2.type_1_demods()
+
+    demods = modulation_utils.type_1_demods()
 
     # Create Options Parser:
     parser = OptionParser (option_class=eng_option, conflict_handler="resolve")
     expert_grp = parser.add_option_group("Expert")
 
     parser.add_option("-m", "--modulation", type="choice", choices=demods.keys(), 
-                      default='dbpsk2',
+                      default='gmsk',
                       help="Select modulation from: %s [default=%%default]"
                             % (', '.join(demods.keys()),))
 

@@ -23,7 +23,6 @@ from math import pi
 from gnuradio import gr, packet_utils
 import gnuradio.gr.gr_threading as _threading
 
-
 # /////////////////////////////////////////////////////////////////////////////
 #                   mod/demod with packets as i/o
 # /////////////////////////////////////////////////////////////////////////////
@@ -143,22 +142,28 @@ class demod_pkts(gr.hier_block2):
         self.framer_sink = gr.framer_sink_1(self._rcvd_pktq)
         self.connect(self, self._demodulator, self.correlator, self.framer_sink)
         
-        self._watcher = _queue_watcher_thread(self._rcvd_pktq, callback)
+        self._watcher = _queue_watcher_thread(self._rcvd_pktq, callback, demodulator)
 
 
 class _queue_watcher_thread(_threading.Thread):
-    def __init__(self, rcvd_pktq, callback):
+    def __init__(self, rcvd_pktq, callback, demod):
         _threading.Thread.__init__(self)
         self.setDaemon(1)
         self.rcvd_pktq = rcvd_pktq
         self.callback = callback
         self.keep_running = True
+        self.demod = demod
         self.start()
 
 
     def run(self):
         while self.keep_running:
+            print "snr: \n", self.demod.slicer.snr()
             msg = self.rcvd_pktq.delete_head() #Del msg frm head of  queue, return it. Block if no msg avail. 
             ok, payload = packet_utils.unmake_packet(msg.to_string(), int(msg.arg1()))
             if self.callback:
                 self.callback(ok, payload)
+
+print dir(gr.cvar)
+#print dir(gr)
+print dir(gr.binary_slicer_fb2())
