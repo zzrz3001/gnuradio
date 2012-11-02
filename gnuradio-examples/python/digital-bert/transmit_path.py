@@ -59,5 +59,5 @@ class transmit_path(gr.hier_block2):
 					     taps)	    # FIR taps
 
         # Wire block inputs and outputs
-        self.connect(self._bits, self._coder, self._scrambler, self._mapper, self._rrc, self)
+        self.connect(self._bits, self._scrambler, self._mapper, self._rrc, self)
 

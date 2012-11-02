@@ -103,7 +103,7 @@ class receive_path(gr.hier_block2):
         self._ber = gr.probe_density_b(1.0/symbol_rate)
 
         self.connect(self, self._agc, self._rrc, self._costas, self._mm, 
-                     self._c2r, self._slicer, self._descrambler, self._decoder, self._ber)
+                     self._c2r, self._slicer, self._descrambler, self._ber)
 
     def frequency_offset(self):
         return self._costas.freq()*self._if_rate/(2*math.pi)
