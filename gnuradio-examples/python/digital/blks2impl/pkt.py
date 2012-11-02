@@ -154,6 +154,8 @@ class _queue_watcher_thread(_threading.Thread):
         self.keep_running = True
         self.demod = demod
         self.start()
+        self.packetOks = []
+        self.per = 0
 
 
     def run(self):
@@ -161,9 +163,17 @@ class _queue_watcher_thread(_threading.Thread):
             print "snr: \n", self.demod.slicer.snr()
             msg = self.rcvd_pktq.delete_head() #Del msg frm head of  queue, return it. Block if no msg avail. 
             ok, payload = packet_utils.unmake_packet(msg.to_string(), int(msg.arg1()))
+            print type(ok)
+            if len(self.packetOks) < 50:
+                self.packetOks.append(ok)
+            else:
+                self.packetOks.append(ok)
+                self.packetOks = self.packetOks[1:]
+            self.per = float(self.packetOks.count(False))/float(len(self.packetOks))
+            print "packet error rate: ", self.per
             if self.callback:
                 self.callback(ok, payload)
 
-print dir(gr.cvar)
+
 #print dir(gr)
-print dir(gr.binary_slicer_fb2())
+

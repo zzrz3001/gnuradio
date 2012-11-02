@@ -162,6 +162,8 @@ if __name__ == "__main__":
     print "\n*** SNR estimator is inaccurate below about 7dB"
     print "*** BER estimator is inaccurate above about 10%\n"
     updater = status_thread(tb)
+    
+    print dir(optparse)
 
     try:
         tb.run()

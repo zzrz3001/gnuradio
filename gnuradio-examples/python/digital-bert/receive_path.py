@@ -19,7 +19,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, eng_notation
+from gnuradio import gr, eng_notation, atsc
 import math
 
 n2s = eng_notation.num_to_str
@@ -97,12 +97,13 @@ class receive_path(gr.hier_block2):
         
         # Descramble BERT sequence.  A channel error will create 3 incorrect bits
         self._descrambler = gr.descrambler_bb(0x8A, 0x7F, 7) # CCSDS 7-bit descrambler
+        self._decoder = atsc.rs_decoder() #reed-solomon decoder
 
         # Measure BER by the density of 0s in the stream
         self._ber = gr.probe_density_b(1.0/symbol_rate)
 
         self.connect(self, self._agc, self._rrc, self._costas, self._mm, 
-                     self._c2r, self._slicer, self._descrambler, self._ber)
+                     self._c2r, self._slicer, self._descrambler, self._decoder, self._ber)
 
     def frequency_offset(self):
         return self._costas.freq()*self._if_rate/(2*math.pi)

@@ -19,7 +19,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr
+from gnuradio import gr, atsc
 from math import pi, log10
 import cmath
 
@@ -40,7 +40,9 @@ class transmit_path(gr.hier_block2):
 
         # Create BERT data bit stream	
 	self._bits = gr.vector_source_b([1,], True)      # Infinite stream of ones
+        self._coder = atsc.rs_encoder()
         self._scrambler = gr.scrambler_bb(0x8A, 0x7F, 7) # CCSDS 7-bit scrambler
+
 
 	# Map to constellation
 	self._constellation = [-1+0j, 1+0j]
@@ -57,5 +59,5 @@ class transmit_path(gr.hier_block2):
 					     taps)	    # FIR taps
 
         # Wire block inputs and outputs
-        self.connect(self._bits, self._scrambler, self._mapper, self._rrc, self)
+        self.connect(self._bits, self._coder, self._scrambler, self._mapper, self._rrc, self)
 
