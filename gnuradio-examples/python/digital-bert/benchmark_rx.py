@@ -163,7 +163,7 @@ if __name__ == "__main__":
     print "*** BER estimator is inaccurate above about 10%\n"
     updater = status_thread(tb)
     
-    print dir(optparse)
+    #print dir(optparse)
 
     try:
         tb.run()
