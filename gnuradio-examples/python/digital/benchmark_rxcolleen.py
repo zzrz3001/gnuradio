@@ -67,7 +67,7 @@ def main():
 
         print "ok = %5s  pktno = %4d  n_rcvd = %4d  n_right = %4d" % (
             ok, pktno, n_rcvd, n_right)
-        #print "payload ",payload
+        print "payload ",payload
 
 
     demods = modulation_utils.type_1_demods()
