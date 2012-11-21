@@ -20,8 +20,10 @@
 # 
 
 from math import pi
-from gnuradio import gr, packet_utils
+from gnuradio import gr
+import packet_utils2
 import gnuradio.gr.gr_threading as _threading
+import binascii
 
 # /////////////////////////////////////////////////////////////////////////////
 #                   mod/demod with packets as i/o
@@ -62,8 +64,8 @@ class mod_pkts(gr.hier_block2):
         self._whitener_offset = 0
         
         if access_code is None:
-            access_code = packet_utils.default_access_code
-        if not packet_utils.is_1_0_string(access_code):
+            access_code = packet_utils2.default_access_code
+        if not packet_utils2.is_1_0_string(access_code):
             raise ValueError, "Invalid access_code %r. Must be string of 1's and 0's" % (access_code,)
         self._access_code = access_code
 
@@ -81,14 +83,14 @@ class mod_pkts(gr.hier_block2):
         if eof:
             msg = gr.message(1) # tell self._pkt_input we're not sending any more packets
         else:
-            # print "original_payload =", string_to_hex_list(payload)
-            pkt = packet_utils.make_packet(payload,
+            print "original_payload =", string_to_hex_list(payload)
+            pkt = packet_utils2.make_packet(payload,
                                            self._modulator.samples_per_symbol(),
                                            self._modulator.bits_per_symbol(),
                                            self._access_code,
                                            self._pad_for_usrp,
                                            self._whitener_offset)
-            #print "pkt =", string_to_hex_list(pkt)
+            print "pkt =", string_to_hex_list(pkt)
             msg = gr.message_from_string(pkt)
             if self._use_whitener_offset is True:
                 self._whitener_offset = (self._whitener_offset + 1) % 16
@@ -128,8 +130,8 @@ class demod_pkts(gr.hier_block2):
 
         self._demodulator = demodulator
         if access_code is None:
-            access_code = packet_utils.default_access_code
-        if not packet_utils.is_1_0_string(access_code):
+            access_code = packet_utils2.default_access_code
+        if not packet_utils2.is_1_0_string(access_code):
             raise ValueError, "Invalid access_code %r. Must be string of 1's and 0's" % (access_code,)
         self._access_code = access_code
 
@@ -162,8 +164,14 @@ class _queue_watcher_thread(_threading.Thread):
         while self.keep_running:
             print "snr: \n", self.demod.slicer.snr()
             msg = self.rcvd_pktq.delete_head() #Del msg frm head of  queue, return it. Block if no msg avail. 
-            ok, payload = packet_utils.unmake_packet(msg.to_string(), int(msg.arg1()))
-            print type(ok)
+            ##what is the arg?
+            ok, payload = packet_utils2.unmake_packet(msg.to_string(), int(msg.arg1()))
+            print 'payload',payload
+           
+            #print 'msg', struct.unpack(msg)#[:-4]
+            #print "size = ", msg.length() , " " , len(msg.to_string()) 
+
+
             if len(self.packetOks) < 50:
                 self.packetOks.append(ok)
             else:

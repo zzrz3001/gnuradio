@@ -26,6 +26,7 @@
 #include <gr_message.h>
 #include <assert.h>
 #include <string.h>
+#include <stdio.h>
 
 static long s_ncurrently_allocated = 0;
 
@@ -68,8 +69,13 @@ gr_message::~gr_message ()
 std::string
 gr_message::to_string() const
 { 
+  printf("hello world22\n");//d_msg_start);
+  for(int i = 0; i<length(); i++)
+    printf("here %u\n", d_msg_start[i]);//d_msg_start);
   return std::string((char *)d_msg_start, length());
 }
+
+
 
 long
 gr_message_ncurrently_allocated ()
