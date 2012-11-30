@@ -39,8 +39,14 @@ gr_make_message (long type, double arg1, double arg2, size_t length)
 gr_message_sptr
 gr_make_message_from_string(const std::string s, long type, double arg1, double arg2)
 {
+
   gr_message_sptr m = gr_make_message(type, arg1, arg2, s.size());
   memcpy(m->msg(), s.data(), s.size());
+  unsigned char * msg  = m->msg();
+  printf("%s\n",s.c_str());
+  for(int i = 0; i < m->length(); i++)
+    printf("%i ", msg[i]);
+  printf("\n");
   return m;
 }
 

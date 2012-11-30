@@ -129,7 +129,6 @@ def make_packet(payload, samples_per_symbol, bits_per_symbol,
     
     payload_with_crc = gru.gen_and_append_crc32(payload)
     #print "outbound crc =", string_to_hex_list(payload_with_crc[-4:])
-    print "outbound payload =", [(i, bin(int(string_to_hex_list(i)[0],16))) for i in payload_with_crc[1:-4]]
 
     L = len(payload_with_crc)
     MAXLEN = len(random_mask_tuple)
@@ -173,6 +172,7 @@ def _npadding_bytes(pkt_byte_len, samples_per_symbol, bits_per_symbol):
     return byte_modulus - r
     
 
+#whitened packer w/ crc = msg.to_string()
 def unmake_packet(whitened_payload_with_crc, whitener_offset=0, dewhitening=True):
     """
     Return (ok, payload)
@@ -187,9 +187,9 @@ def unmake_packet(whitened_payload_with_crc, whitener_offset=0, dewhitening=True
 
     ok, payload = gru.check_crc32(payload_with_crc)
 
-    if 1:
-        #print "payload_with_crc =", string_to_hex_list(payload_with_crc)
-        #print "ok = %r, len(payload) = %d" % (ok, len(payload))
+    if 0:
+        print "payload_with_crc =", string_to_hex_list(payload_with_crc)
+        print "ok = %r, len(payload) = %d" % (ok, len(payload))
         print "payload =", string_to_hex_list(payload)
 
     return ok, payload

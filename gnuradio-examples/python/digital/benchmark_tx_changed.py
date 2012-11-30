@@ -120,7 +120,7 @@ def main():
         #struct.pack(fmt, v1, v2, ...)
         #Return a string containing the values v1, v2, ...
         payload = struct.pack('!H', pktno & 0xffff) + data
-        print struct.pack('!H', pktno & 0xffff)#payload
+        print type(data)#struct.pack('!H', pktno & 0xffff)#payload
         
         send_pkt(payload)
         n += len(payload)

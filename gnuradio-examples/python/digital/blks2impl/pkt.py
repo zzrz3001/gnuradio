@@ -74,6 +74,7 @@ class mod_pkts(gr.hier_block2):
         self.connect(self._pkt_input, self._modulator, self)
 
     def send_pkt(self, payload='', eof=False):
+        print("SENDING PACKET\n");
         """
         Send the payload.
 
