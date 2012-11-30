@@ -77,7 +77,8 @@ gr_message::to_string() const
 { 
   printf("hello world22\n");//d_msg_start);
   for(int i = 0; i<length(); i++)
-    printf("here %u\n", d_msg_start[i]);//d_msg_start);
+    printf("%i ", d_msg_start[i]);
+  printf("\n");
   return std::string((char *)d_msg_start, length());
 }
 
