@@ -167,7 +167,9 @@ class _queue_watcher_thread(_threading.Thread):
             msg = self.rcvd_pktq.delete_head() #Del msg frm head of  queue, return it. Block if no msg avail. 
             ##what is the arg?
             ok, payload = packet_utils2.unmake_packet(msg.to_string(), int(msg.arg1()))
-            print 'payload',payload
+            m = msg.to_string()
+            print 'payload (changed)"', m
+            print 'done'
            
             #print 'msg', struct.unpack(msg)#[:-4]
             #print "size = ", msg.length() , " " , len(msg.to_string()) 

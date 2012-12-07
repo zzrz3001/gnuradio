@@ -103,7 +103,7 @@ def make_header(payload_len, whitener_offset=0):
 
 def make_packet(payload, samples_per_symbol, bits_per_symbol,
                 access_code=default_access_code, pad_for_usrp=True,
-                whitener_offset=0, whitening=True):
+                whitener_offset=0, whitening=False):
     """
     Build a packet, given access code, payload, and whitener offset
 
@@ -173,7 +173,7 @@ def _npadding_bytes(pkt_byte_len, samples_per_symbol, bits_per_symbol):
     
 
 #whitened packer w/ crc = msg.to_string()
-def unmake_packet(whitened_payload_with_crc, whitener_offset=0, dewhitening=True):
+def unmake_packet(whitened_payload_with_crc, whitener_offset=0, dewhitening=False):
     """
     Return (ok, payload)
 

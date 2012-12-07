@@ -216,7 +216,7 @@ class gmsk_demod(gr.hier_block2):
 
 	# Demodulate FM
 	sensitivity = (pi / 2) / samples_per_symbol
-	self.fmdemod = gr.quadrature_demod2_cf(1.0 / sensitivity)
+	self.fmdemod = gr.quadrature_demod_cf(1.0 / sensitivity)
 
 	# the clock recovery block tracks the symbol clock and resamples as needed.
 	# the output of the block is a stream of soft symbols (float)

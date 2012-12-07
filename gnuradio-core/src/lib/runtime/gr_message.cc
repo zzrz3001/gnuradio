@@ -27,6 +27,8 @@
 #include <assert.h>
 #include <string.h>
 #include <stdio.h>
+#include <iostream>
+#include <fstream>
 
 static long s_ncurrently_allocated = 0;
 
@@ -75,10 +77,16 @@ gr_message::~gr_message ()
 std::string
 gr_message::to_string() const
 { 
+  std::ofstream out("test.txt");
+  if(! out)
+    {  
+      printf("Cannot open output file\n");
+    }
   printf("hello world22\n");//d_msg_start);
   for(int i = 0; i<length(); i++)
     printf("%i ", d_msg_start[i]);
   printf("\n");
+  out.write((char *)d_msg_start, length());
   return std::string((char *)d_msg_start, length());
 }
 
