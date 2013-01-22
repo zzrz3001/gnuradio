@@ -77,16 +77,24 @@ gr_message::~gr_message ()
 std::string
 gr_message::to_string() const
 { 
-  std::ofstream out("test.txt");
+  std::ofstream out("rcvd.txt", std::ios::out | std::ios::app);
   if(! out)
     {  
       printf("Cannot open output file\n");
     }
-  printf("hello world22\n");//d_msg_start);
+
+  printf("SOP: ");
+
+  //collect poacket from buffer
   for(int i = 0; i<length(); i++)
     printf("%i ", d_msg_start[i]);
-  printf("\n");
+  printf("EOP\n");
+
+  //write packet to file
+  out.write("SOP: ", 5);
   out.write((char *)d_msg_start, length());
+  out.write("EOP\n", 4);
+ 
   return std::string((char *)d_msg_start, length());
 }
 
