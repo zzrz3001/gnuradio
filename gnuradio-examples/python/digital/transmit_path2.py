@@ -54,7 +54,7 @@ class transmit_path(gr.hier_block2):
         # transmitter
 	modulator = self._modulator_class(**mod_kwargs)
         self.packet_transmitter = \
-            blks22.mod_pkts(modulator,
+            blks2.mod_pkts(modulator,
                            access_code=None,
                            msgq_limit=4,
                            pad_for_usrp=True)

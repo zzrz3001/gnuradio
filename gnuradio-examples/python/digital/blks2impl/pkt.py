@@ -84,14 +84,12 @@ class mod_pkts(gr.hier_block2):
         if eof:
             msg = gr.message(1) # tell self._pkt_input we're not sending any more packets
         else:
-            print "original_payload =", string_to_hex_list(payload)
             pkt = packet_utils2.make_packet(payload,
                                            self._modulator.samples_per_symbol(),
                                            self._modulator.bits_per_symbol(),
                                            self._access_code,
                                            self._pad_for_usrp,
                                            self._whitener_offset)
-            print "pkt =", string_to_hex_list(pkt)
             msg = gr.message_from_string(pkt)
             if self._use_whitener_offset is True:
                 self._whitener_offset = (self._whitener_offset + 1) % 16

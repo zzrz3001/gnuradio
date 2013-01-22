@@ -118,6 +118,8 @@ def make_packet(payload, samples_per_symbol, bits_per_symbol,
     Packet will have access code at the beginning, followed by length, payload
     and finally CRC-32.
     """
+    print "making packet!\n"
+
     if not is_1_0_string(access_code):
         raise ValueError, "access_code must be a string containing only 0's and 1's (%r)" % (access_code,)
 
