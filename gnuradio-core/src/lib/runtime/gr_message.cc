@@ -31,6 +31,21 @@
 #include <fstream>
 
 static long s_ncurrently_allocated = 0;
+static uint16_t position = -1;
+
+  
+char * binary(unsigned x, char * buffer)
+{
+  for (int i = 7; i>=0; i--)
+    {
+      //if the ith bit is set....                                             
+      if (x & (1 << i))
+	buffer[7-i] = '1';
+      else buffer[7-i] = '0';
+    }
+  buffer[8] = '\0';
+  return buffer;    
+}
 
 gr_message_sptr
 gr_make_message (long type, double arg1, double arg2, size_t length)
@@ -83,17 +98,27 @@ gr_message::to_string() const
       printf("Cannot open output file\n");
     }
 
-  printf("SOP: ");
+  //printf("d_msg_start = %d\n ", *d_msg_start );
+  //printf("position    = %d\n ", position );
 
-  //collect poacket from buffer
+  //collect packet from buffer
   for(int i = 0; i<length(); i++)
     printf("%i ", d_msg_start[i]);
   printf("EOP\n");
 
   //write packet to file
-  out.write("SOP: ", 5);
-  out.write((char *)d_msg_start, length());
-  out.write("EOP\n", 4);
+  uint16_t pktno = *((uint16_t *) d_msg_start);
+  if (pktno != position) {
+    //out.write((char *)(d_msg_start+2), length()-6);
+    //out.write("\n", 1); 
+
+    char buffer[9];
+    for (int i = 2; i<length()-4; i++) {
+      out.write(binary(d_msg_start[i], buffer), 8);
+    }
+    out.write("\n", 1); 
+  }
+  position = pktno;
  
   return std::string((char *)d_msg_start, length());
 }
