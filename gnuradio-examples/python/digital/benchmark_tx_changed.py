@@ -35,6 +35,24 @@ import usrp_transmit_path
 #print os.getpid()
 #raw_input('Attach and press enter')
 
+def recode(s):
+    bloop = ""
+    
+    #read every 8 bits, starting from index 2
+    for j in range (0,len(s),8) :# = 3, j < 258, j += 8):
+        res = 0;
+        for i in range(0,8):
+            res = 2*res + (1 if s[i+j] == '1' else 0)
+            #print str[i+j]," "
+            #if (s[i+j] == '1'):
+            #    print "true\n", res
+            #else: print "\n"
+        
+        bloop += chr(res);
+    print bloop + "\n"
+    return bloop
+
+
 class my_top_block(gr.top_block):
     def __init__(self, modulator, options):
         gr.top_block.__init__(self)
@@ -61,7 +79,7 @@ def main():
     expert_grp = parser.add_option_group("Expert")
 
     parser.add_option("-m", "--modulation", type="choice", choices=mods.keys(),
-                      default='gmsk',
+                      default='gmsk', #'bpsk', need to add SNR stuff from gmsk
                       help="Select modulation from: %s [default=%%default]"
                             % (', '.join(mods.keys()),))
 
@@ -108,15 +126,20 @@ def main():
     n = 0
     pktno = 0
     pkt_size = int(options.size)
+    
+
+    f = open('/home/georgios_colleen/gnuradio/gnuradio-examples/python/digital/sent.txt', 'a')
 
     while pktno < nbytes:
         if options.from_file is None:
             data = (pkt_size - 2) * chr(pktno & 0xff) 
         else:
-            data = source_file.read(pkt_size - 2)
-            if data == '':
+            fromfile = source_file.read(pkt_size - 2)
+            if fromfile == '':
                 break;
-
+            data = recode(fromfile)
+            f.write(fromfile+"\n")
+            
         #struct.pack(fmt, v1, v2, ...)
         #Return a string containing the values v1, v2, ...
         payload = struct.pack('!H', pktno & 0xffff) + data
