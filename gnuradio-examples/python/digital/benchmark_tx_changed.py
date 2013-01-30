@@ -74,12 +74,13 @@ def main():
         print "ok = %r, payload = '%s'" % (ok, payload)
 
     mods = modulation_utils.type_1_mods()
+    print "mods: ",mods
 
     parser = OptionParser(option_class=eng_option, conflict_handler="resolve")
     expert_grp = parser.add_option_group("Expert")
 
     parser.add_option("-m", "--modulation", type="choice", choices=mods.keys(),
-                      default='gmsk', #'bpsk', need to add SNR stuff from gmsk
+                      default='dbpsk', #'dbpsk', need to add SNR stuff from gmsk
                       help="Select modulation from: %s [default=%%default]"
                             % (', '.join(mods.keys()),))
 
