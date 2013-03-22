@@ -1,3 +1,4 @@
+
 #
 # Copyright 2005, 2006, 2007 Free Software Foundation, Inc.
 # 
@@ -73,8 +74,7 @@ class mod_pkts(gr.hier_block2):
         self._pkt_input = gr.message_source(gr.sizeof_char, msgq_limit)
         self.connect(self._pkt_input, self._modulator, self)
 
-    def send_pkt(self, payload='', eof=False):
-        print("SENDING PACKET\n");
+    def send_pkt(self, payload=None, eof=False):
         """
         Send the payload.
 
@@ -82,6 +82,7 @@ class mod_pkts(gr.hier_block2):
         @type payload: string
         """
         if eof:
+            print("Done sending pkts")
             msg = gr.message(1) # tell self._pkt_input we're not sending any more packets
         else:
             pkt = packet_utils2.make_packet(payload,
@@ -90,13 +91,17 @@ class mod_pkts(gr.hier_block2):
                                            self._access_code,
                                            self._pad_for_usrp,
                                            self._whitener_offset)
-            msg = gr.message_from_string(pkt)
+            print "pkt_utils returned ", pkt
+            
             if self._use_whitener_offset is True:
                 self._whitener_offset = (self._whitener_offset + 1) % 16
-                
-        self._pkt_input.msgq().insert_tail(msg)
 
-
+            if pkt:
+                print("SENDING PACKET\n");
+                msg = gr.message_from_string(pkt)
+                print("msg set")
+                self._pkt_input.msgq().insert_tail(msg) #else do nothing
+                print("msg added to msgq")
 
 class demod_pkts(gr.hier_block2):
     """

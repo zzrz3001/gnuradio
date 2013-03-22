@@ -21,7 +21,13 @@
 
 import struct
 import numpy
+import collections
 from gnuradio import gru
+
+uncoded = collections.deque()
+coded = collections.deque()
+nin = 5 #TODO: change to passed in parameter
+nout = 5
 
 
 def conv_packed_binary_string_to_1_0_string(s):
@@ -118,8 +124,69 @@ def make_packet(payload, samples_per_symbol, bits_per_symbol,
     Packet will have access code at the beginning, followed by length, payload
     and finally CRC-32.
     """
-    print "making packet!\n"
 
+    print("make_packet has been called with payload '%s' \n\n coded = %s \n uncoded = %s"%(payload,len(coded),len(uncoded)))
+    if  (payload != None):
+        if not is_1_0_string(access_code):
+            raise ValueError, "access_code must be a string containing only 0's and 1's (%r)" % (access_code,)
+    
+        if not whitener_offset >=0 and whitener_offset < 16:
+            raise ValueError, "whitener_offset must be between 0 and 15, inclusive (%i)" % (whitener_offset,)
+        
+        pktno = '' #payload[0:2] add back later
+        payload_with_crc = gru.gen_and_append_crc32(payload[:])
+
+        #insert new packet into queue
+        #TODO: replace with something more efficient than list?
+        print("appending new uncoded pkt")
+        uncoded.append([payload_with_crc, pktno, samples_per_symbol, bits_per_symbol, access_code, 
+                        pad_for_usrp, whitener_offset, whitening])
+
+        if len(uncoded) >= nin:
+            print("In uncoded section\n\n")
+            pktdata = [uncoded.popleft() for i in xrange(nin)]
+            payloads = [i[0] for i in pktdata]
+            #TODO: do coding
+            
+            #replace uncoded payloads with coded ones, then add to coded pkt queue
+            for i in xrange(len(pktdata)):
+                pktdata[i][0] = payloads[i]    
+                coded.append(pktdata[i])
+    else:         print("CONFIRMED: NO PAYLOAD")
+
+    if len(coded) > 0:
+        print("In coded section\n\n")
+        (payload, pktno, samples_per_symbol, bits_per_symbol, access_code, 
+         pad_for_usrp, whitener_offset, whitening) = coded.popleft()
+        
+        payload_with_crc = pktno + payload
+        
+        
+        (packed_access_code, padded) = conv_1_0_string_to_packed_binary_string(access_code)
+        (packed_preamble, ignore) = conv_1_0_string_to_packed_binary_string(preamble)
+    
+        
+        L = len(payload_with_crc)
+        MAXLEN = len(random_mask_tuple)
+        if L > MAXLEN:
+            raise ValueError, "len(payload) must be in [0, %d]" % (MAXLEN,)
+        
+        if whitening:
+            pkt = ''.join((packed_preamble, packed_access_code, make_header(L, whitener_offset),
+                           whiten(payload_with_crc, whitener_offset), '\x55'))
+        else:
+            pkt = ''.join((packed_preamble, packed_access_code, make_header(L, whitener_offset),
+                           (payload_with_crc), '\x55'))
+            
+        if pad_for_usrp:
+            pkt = pkt + (_npadding_bytes(len(pkt), int(samples_per_symbol), bits_per_symbol) * '\x55')
+
+        print("returning packet\n")
+        return pkt
+    else: 
+        print("Returning none\n")
+        return None
+    '''
     if not is_1_0_string(access_code):
         raise ValueError, "access_code must be a string containing only 0's and 1's (%r)" % (access_code,)
 
@@ -149,6 +216,7 @@ def make_packet(payload, samples_per_symbol, bits_per_symbol,
 
     #print "make_packet: len(pkt) =", len(pkt)
     return pkt
+    '''
 
 def _npadding_bytes(pkt_byte_len, samples_per_symbol, bits_per_symbol):
     """

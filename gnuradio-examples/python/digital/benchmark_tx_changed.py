@@ -30,6 +30,7 @@ import random, time, struct, sys
 
 # from current dir
 import usrp_transmit_path
+import packet_utils2
 
 #import os 
 #print os.getpid()
@@ -67,7 +68,7 @@ class my_top_block(gr.top_block):
 
 def main():
 
-    def send_pkt(payload='', eof=False):
+    def send_pkt(payload=None, eof=False):
         return tb.txpath.send_pkt(payload, eof)
 
     def rx_callback(ok, payload):
@@ -131,15 +132,24 @@ def main():
 
     f = open('/home/georgios_colleen/gnuradio/gnuradio-examples/python/digital/sent.txt', 'a')
 
-    while pktno < nbytes:
+    filedone=False
+    while pktno < nbytes: #why are we limiting to 100 pkts being sent???
+        print("---------------------pktno = %i, nbytes = %i--------------------"%(pktno,nbytes))
         if options.from_file is None:
             data = (pkt_size - 2) * chr(pktno & 0xff) 
-        else:
+        elif not(filedone):
             fromfile = source_file.read(pkt_size - 2)
+            print("fromfile = %s\n"%fromfile)
             if fromfile == '':
-                break;
-            data = recode(fromfile)
+                filedone = True
+                continue
+            data = fromfile#recode(fromfile)
             f.write(fromfile+"\n")
+        elif len(packet_utils2.coded) > 0:
+            print("CALLING WITH NO PAYLOAD")
+            send_pkt(None)
+            continue
+        else: break #we really, truly have nothing left to send
             
         #struct.pack(fmt, v1, v2, ...)
         #Return a string containing the values v1, v2, ...
@@ -147,12 +157,15 @@ def main():
         print type(data)#struct.pack('!H', pktno & 0xffff)#payload
         
         send_pkt(payload)
+        print("returned from send_pkt")
         n += len(payload)
         sys.stderr.write('.')
         if options.discontinuous and pktno % 10 == 9:
             time.sleep(1)
         pktno += 1
+
     time.sleep(3)
+    print("About to send EOF")
     send_pkt(eof=True)
     
     tb.wait()                       # wait for it to finish

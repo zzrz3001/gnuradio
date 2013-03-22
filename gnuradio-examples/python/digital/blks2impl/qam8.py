@@ -207,4 +207,3 @@ class qam8_demod(gr.hier_block2):
 # NOT READY TO BE USED YET -- ENABLE AT YOUR OWN RISK
 modulation_utils.add_type_1_mod('qam8', qam8_mod)
 modulation_utils.add_type_1_demod('qam8', qam8_demod)
-#modulation_utils.add_type_1_demod('qam8', qam8_demod)
